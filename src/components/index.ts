@@ -1,3 +1,3 @@
-export * from "./category";
-export * from "./supplier";
-export * from "./product";
+export * from "./Category";
+export * from "./Supplier";
+export * from "./Product";

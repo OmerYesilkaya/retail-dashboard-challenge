@@ -1,6 +1,6 @@
-import { BigCard } from "@/components/bigCard";
+import { BigCard } from "@/components/BigCard";
 import { api, HydrateClient } from "@/trpc/server";
-import { DashboardProductChart } from "@/views/dashboardProductChart";
+import { DashboardProductChart } from "@/views/DashboardProductChart";
 import { ProductTable } from "@/views/ProductTable";
 
 export default function Dashboard() {

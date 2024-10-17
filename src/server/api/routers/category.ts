@@ -1,20 +1,14 @@
-import { z } from "zod";
-
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { CreateCategorySchema } from "@/lib/types";
 
 export const categoryRouter = createTRPCRouter({
   create: publicProcedure
-    .input(
-      z.object({
-        name: z.string().min(1),
-        description: z.string().min(1),
-      }),
-    )
+    .input(CreateCategorySchema)
     .mutation(async ({ ctx, input }) => {
       return ctx.db.category.create({
         data: {
           name: input.name,
-          description: input.description,
+          description: input.description ?? "",
         },
       });
     }),

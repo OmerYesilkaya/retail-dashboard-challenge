@@ -2,6 +2,17 @@
 
 import { api } from "@/trpc/react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
@@ -10,7 +21,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/Card";
@@ -21,15 +31,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/Select";
-import { type Product } from "@prisma/client";
-import { Controller, type SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "@/hooks/use-toast";
 
-type FormData = ConvertToFormData<Product>;
+import { toast } from "@/hooks/use-toast";
+import { CreateProductSchema, type CreateProductType } from "@/lib/types";
 
 export function CreateProduct() {
   const utils = api.useUtils();
-  const { register, handleSubmit, reset, control } = useForm<FormData>();
+  const form = useForm<CreateProductType>({
+    resolver: zodResolver(CreateProductSchema),
+    defaultValues: {
+      categoryId: undefined,
+      supplierId: undefined,
+      description: "",
+      name: "",
+      price: "",
+      quantity_in_stock: "1",
+    },
+  });
 
   const [categories] = api.category.getAll.useSuspenseQuery();
   const [suppliers] = api.supplier.getAll.useSuspenseQuery();
@@ -40,28 +58,9 @@ export function CreateProduct() {
         title: "Success",
         description: "You have created a new product!",
       });
-      reset();
+      form.reset();
     },
   });
-
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    const {
-      name,
-      description,
-      price,
-      categoryId,
-      supplierId,
-      quantity_in_stock,
-    } = data;
-    createProduct.mutate({
-      name,
-      description,
-      quantity_in_stock: parseInt(quantity_in_stock),
-      price: parseInt(price),
-      categoryId: parseInt(categoryId),
-      supplierId: parseInt(supplierId),
-    });
-  };
 
   return (
     <Card>
@@ -71,89 +70,135 @@ export function CreateProduct() {
           Create a new product by filling the form below.
         </CardDescription>
       </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit((e) => createProduct.mutate(e))}
+            className="space-y-2"
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input type="text" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex w-full gap-4">
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem className="grow">
+                    <FormLabel>Price</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="quantity_in_stock"
+                render={({ field }) => (
+                  <FormItem className="grow">
+                    <FormLabel>Stock</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex w-full gap-4">
+              <FormField
+                control={form.control}
+                name="categoryId"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Category</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories.map((category) => {
+                          return (
+                            <SelectItem
+                              key={category.id}
+                              value={category.id.toString()}
+                            >
+                              {category.name}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="supplierId"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Supplier</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Supplier" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {suppliers.map((supplier) => {
+                          return (
+                            <SelectItem
+                              key={supplier.id}
+                              value={supplier.id.toString()}
+                            >
+                              {supplier.name}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <CardContent className="flex flex-col gap-1">
-          <Input
-            type="text"
-            placeholder="Name"
-            {...register("name", { required: true })}
-          />
-          <Textarea
-            placeholder="Description"
-            {...register("description", { required: false })}
-          />
-          <div className="flex gap-1">
-            <Input
-              className="w-[50%]"
-              type="number"
-              placeholder="Price"
-              {...register("price", { min: 1, required: true })}
-            />
-            <Input
-              className="w-[50%]"
-              type="number"
-              placeholder="Stock"
-              {...register("quantity_in_stock", { min: 1, required: true })}
-            />
-          </div>
-          <div className="flex gap-1">
-            <Controller
-              control={control}
-              name="categoryId"
-              rules={{ required: true }}
-              render={({ field: { onChange, value } }) => (
-                <Select onValueChange={onChange} value={value}>
-                  <SelectTrigger className="w-[50%]">
-                    <SelectValue placeholder="Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((category) => {
-                      return (
-                        <SelectItem
-                          key={category.id}
-                          value={category.id.toString()}
-                        >
-                          {category.name}
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectContent>
-                </Select>
-              )}
-            />
-            <Controller
-              control={control}
-              name="supplierId"
-              rules={{ required: true }}
-              render={({ field: { onChange, value } }) => (
-                <Select onValueChange={onChange} value={value}>
-                  <SelectTrigger className="w-[50%]">
-                    <SelectValue placeholder="Supplier" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {suppliers.map((supplier) => {
-                      return (
-                        <SelectItem
-                          key={supplier.id}
-                          value={supplier.id.toString()}
-                        >
-                          {supplier.name}
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectContent>
-                </Select>
-              )}
-            />
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button type="submit" disabled={createProduct.isPending}>
-            {createProduct.isPending ? "Submitting..." : "Submit"}
-          </Button>
-        </CardFooter>
-      </form>
+            <Button type="submit" disabled={createProduct.isPending}>
+              {createProduct.isPending ? "Submitting..." : "Submit"}
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
 
       <Separator />
       <CardHeader>

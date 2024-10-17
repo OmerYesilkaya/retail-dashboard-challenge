@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { CreateProductSchema } from "@/lib/types";
 
 // TODO(omer): move to some shared location
 function generate_sku() {
@@ -18,25 +19,16 @@ function generate_sku() {
 
 export const productRouter = createTRPCRouter({
   create: publicProcedure
-    .input(
-      z.object({
-        name: z.string().min(1),
-        description: z.string().optional(),
-        price: z.number().min(1),
-        categoryId: z.number(),
-        supplierId: z.number(),
-        quantity_in_stock: z.number().min(1),
-      }),
-    )
+    .input(CreateProductSchema)
     .mutation(async ({ ctx, input }) => {
       return ctx.db.product.create({
         data: {
           name: input.name,
           description: input.description ?? "",
-          price: input.price,
-          categoryId: input.categoryId,
-          supplierId: input.supplierId,
-          quantity_in_stock: input.quantity_in_stock,
+          price: parseFloat(input.price),
+          categoryId: parseInt(input.categoryId),
+          supplierId: parseInt(input.supplierId),
+          quantity_in_stock: parseInt(input.quantity_in_stock),
           sku: generate_sku(), // NOTE(omer): Not sure if this is how you use sku but what ever...
         },
       });

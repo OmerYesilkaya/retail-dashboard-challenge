@@ -23,6 +23,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+// TODO(omer): Improve chart UI/visuals
 export function DashboardProductChart() {
   const [data] = api.product.getMostRecent.useSuspenseQuery({ limit: 10 });
 

@@ -1,48 +1,31 @@
-import { BigCard } from "@/components/BigCard";
-import { PageHeader } from "@/components/ui/PageHeader";
 import { api, HydrateClient } from "@/trpc/server";
+
+import { PageHeader } from "@/components/ui/PageHeader";
 import { CategoryStockChart } from "@/components/DashboardProductChart";
 import { ProductTable } from "@/components/ProductTable";
-import {
-  ArchiveIcon,
-  CubeIcon,
-  LightningBoltIcon,
-} from "@radix-ui/react-icons";
+import { InfoCards } from "@/components/InfoCards";
 
 export default function Dashboard() {
-  // TODO(omer): Figure out if we should prefetch everything
   void api.product.getMostRecent.prefetch({ limit: 10 });
-  void api.category.getAll.prefetch();
+  void api.category.getAllWithProductCount.prefetch();
+
+  void api.product.getTotalProductCount.prefetch();
+  void api.product.getTotalStock.prefetch();
+  void api.product.getTotalValue.prefetch();
 
   return (
     <HydrateClient>
       <div className="flex flex-col gap-4">
-        <PageHeader title="Inventory Dashboard" />
-        <div className="flex gap-4">
-          <BigCard
-            label="Total Products"
-            icon={<CubeIcon className="size-5 text-zinc-500" />}
-            format={{ style: "currency", currency: "USD" }}
-            value={10}
-          />
-          <BigCard
-            label="Total Stock"
-            icon={<ArchiveIcon className="size-5 text-zinc-500" />}
-            format={{ style: "currency", currency: "USD" }}
-            value={10}
-          />
-          <BigCard
-            label="Total Value"
-            icon={<LightningBoltIcon className="size-5 text-zinc-500" />}
-            format={{ style: "currency", currency: "USD" }}
-            value={10}
-          />
-        </div>
-        <div className="flex gap-4">
+        <PageHeader title="Dashboard" />
+        <InfoCards />
+        <div className="grid grid-cols-3 gap-4">
           <CategoryStockChart />
           <ProductTable />
         </div>
-        <ProductTable />
+        <div className="flex gap-4">
+          <ProductTable />
+          <ProductTable />
+        </div>
       </div>
     </HydrateClient>
   );
@@ -50,9 +33,8 @@ export default function Dashboard() {
 
 /**
  * TODO(omer):
- * - Prettify UI + Add bigCards
- * - Add ways to add products, categories, suppliers
- * - Make it responsive (?)
- * - Make it performant
+ *
+ * - Form validation + Error handling
+ * - Restock functionality
  *
  */

@@ -19,7 +19,7 @@ export const categoryRouter = createTRPCRouter({
       });
     }),
 
-  getAll: publicProcedure.query(async ({ ctx }) => {
+  getAllWithProductCount: publicProcedure.query(async ({ ctx }) => {
     const category = await ctx.db.category.findMany({
       select: {
         id: true,
@@ -33,6 +33,15 @@ export const categoryRouter = createTRPCRouter({
         ...c,
         product_count: c.products.length,
       };
+    });
+  }),
+
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.category.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
     });
   }),
 });

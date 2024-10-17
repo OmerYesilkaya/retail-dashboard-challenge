@@ -26,4 +26,13 @@ export const supplierRouter = createTRPCRouter({
         },
       });
     }),
+
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.supplier.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+  }),
 });

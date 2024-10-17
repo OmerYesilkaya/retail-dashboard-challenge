@@ -5,10 +5,9 @@ import { CreateProduct } from "@/components/CreateProduct";
 import { CreateSupplier } from "@/components/CreateSupplier";
 import { PageHeader } from "@/components/ui/PageHeader";
 
-export default function Dashboard() {
-  // TODO(omer): Figure out if we should prefetch everything
-  void api.product.getMostRecent.prefetch({ limit: 10 });
+export default function Manage() {
   void api.category.getAll.prefetch();
+  void api.supplier.getAll.prefetch();
 
   return (
     <HydrateClient>

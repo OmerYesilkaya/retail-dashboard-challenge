@@ -23,11 +23,11 @@ export function BigCard({ label, icon, value, format }: Props) {
         format={format}
         locales="en-US"
         transformTiming={{
-          duration: 700,
+          duration: 1500,
           easing: EASING_FUNCTION,
         }}
         spinTiming={{
-          duration: 700,
+          duration: 1500,
           easing: EASING_FUNCTION,
         }}
         opacityTiming={{ duration: 350, easing: "ease-out" }}

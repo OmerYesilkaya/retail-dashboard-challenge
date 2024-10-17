@@ -1,10 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import { api } from "@/trpc/react";
+import { type Category } from "@prisma/client";
+import { type SubmitHandler, useForm } from "react-hook-form";
+
+import { useToast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
 import {
   Card,
   CardContent,
@@ -14,18 +18,27 @@ import {
   CardTitle,
 } from "@/components/ui/Card";
 
+type FormData = ConvertToFormData<Category>;
+
 export function CreateCategory() {
   const utils = api.useUtils();
-  const [name, setName] = useState("");
+  const { toast } = useToast();
+  const { register, handleSubmit, reset } = useForm<FormData>();
   const createCategory = api.category.create.useMutation({
     onSuccess: async () => {
       await utils.category.invalidate();
-      setName("");
-    },
-    onSettled: () => {
-      console.log("settled");
+      toast({
+        title: "Success",
+        description: "You have created a new category!",
+      });
+      reset();
     },
   });
+
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    const { name, description } = data;
+    createCategory.mutate({ name, description });
+  };
 
   return (
     <Card>
@@ -35,22 +48,10 @@ export function CreateCategory() {
           Create a new category by filling the form below.
         </CardDescription>
       </CardHeader>
-
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          // TODO(omer): properly handle creation
-          createCategory.mutate({ name, description: "New Category" });
-        }}
-        className="flex flex-col gap-2"
-      >
-        <CardContent>
-          <Input
-            type="text"
-            placeholder="Title"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <CardContent className="flex flex-col gap-2">
+          <Input type="text" placeholder="Name" {...register("name")} />
+          <Textarea placeholder="Description" {...register("description")} />
         </CardContent>
         <CardFooter>
           <Button type="submit" disabled={createCategory.isPending}>

@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { type Supplier } from "@prisma/client";
 import { api } from "@/trpc/react";
 
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
 import {
   Card,
   CardContent,
@@ -13,20 +14,37 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/Card";
+import { toast } from "@/hooks/use-toast";
+import { type SubmitHandler, useForm } from "react-hook-form";
+
+type FormData = ConvertToFormData<Supplier>;
 
 export function CreateSupplier() {
   const utils = api.useUtils();
-  const [name, setName] = useState("");
+  const { register, handleSubmit, reset } = useForm<FormData>();
 
   const createSupplier = api.supplier.create.useMutation({
     onSuccess: async () => {
       await utils.supplier.invalidate();
-      setName("");
-    },
-    onSettled: () => {
-      console.log("settled");
+      toast({
+        title: "Success",
+        description: "You have created a new supplier!",
+      });
+      reset();
     },
   });
+
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    const { name, address, contactPerson, email, phone, website } = data;
+    createSupplier.mutate({
+      name,
+      address,
+      contactPerson,
+      email,
+      phone,
+      website,
+    });
+  };
 
   return (
     <Card>
@@ -36,27 +54,34 @@ export function CreateSupplier() {
           Create a new supplier by filling the form below.
         </CardDescription>
       </CardHeader>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          // TODO(omer): properly handle creation
-          createSupplier.mutate({
-            name,
-            address: "New address",
-            contactPerson: "Omer",
-            email: "omerfarukyesilkaya@gmail.com",
-            phone: "123123123",
-            website: "www.omeryesilkaya.com",
-          });
-        }}
-      >
-        <CardContent>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <CardContent className="flex flex-col gap-1">
           <Input
             type="text"
-            placeholder="Title"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            placeholder="Name"
+            {...register("name", { required: true })}
           />
+          <Input
+            type="text"
+            placeholder="E-mail"
+            {...register("email", { required: true })}
+          />
+          <Input
+            type="text"
+            placeholder="Phone"
+            {...register("phone", { required: true })}
+          />
+          <Textarea
+            placeholder="Address"
+            {...register("address", { required: true })}
+          />
+          <Input
+            type="text"
+            placeholder="Contact Person"
+            {...register("contactPerson")}
+          />
+
+          <Input type="text" placeholder="Website" {...register("website")} />
         </CardContent>
         <CardFooter>
           <Button type="submit" disabled={createSupplier.isPending}>

@@ -1,8 +1,6 @@
-import {
-  productRouter,
-  categoryRouter,
-  supplierRouter,
-} from "@/server/api/routers";
+import { categoryRouter } from "@/server/api/routers/category";
+import { productRouter } from "@/server/api/routers/product";
+import { supplierRouter } from "@/server/api/routers/supplier";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 
 /**

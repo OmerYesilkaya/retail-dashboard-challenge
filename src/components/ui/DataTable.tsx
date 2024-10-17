@@ -62,7 +62,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="w-full">
+    <div className="col-span-2 w-full">
       {/* TODO(omer): Make this more dynamic, not every table has name field */}
       <div className="flex w-full items-center gap-4 pb-4">
         <Input

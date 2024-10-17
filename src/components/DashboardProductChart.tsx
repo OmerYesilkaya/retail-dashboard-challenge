@@ -19,7 +19,7 @@ const chartConfig = {
 
 // TODO(omer): Improve chart UI/visuals
 export function CategoryStockChart() {
-  const [data] = api.category.getAll.useSuspenseQuery();
+  const [data] = api.category.getAllWithProductCount.useSuspenseQuery();
 
   return (
     <div className="flex w-full flex-col gap-4 rounded-md border p-10">

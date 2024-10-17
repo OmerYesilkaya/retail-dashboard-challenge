@@ -20,12 +20,3 @@ export default function Manage() {
     </HydrateClient>
   );
 }
-
-/**
- * TODO(omer):
- * - Prettify UI + Add bigCards
- * - Add ways to add products, categories, suppliers
- * - Make it responsive (?)
- * - Make it performant
- *
- */

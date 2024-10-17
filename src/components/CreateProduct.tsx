@@ -66,7 +66,7 @@ export function CreateProduct() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Add Products</CardTitle>
+        <CardTitle>Add a Product</CardTitle>
         <CardDescription>
           Create a new product by filling the form below.
         </CardDescription>

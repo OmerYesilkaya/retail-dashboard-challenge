@@ -9,8 +9,14 @@ export const supplierRouter = createTRPCRouter({
         name: z.string().min(1),
         address: z.string().min(1),
         contactPerson: z.string().min(1),
-        email: z.string().min(1), // TODO(omer): fix email validation
-        phone: z.string().min(1), // TODO(omer): fix phone validation
+        email: z.string().min(1).email(),
+        phone: z
+          .string()
+          .min(1)
+          .regex(
+            /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/,
+            "Invalid number!",
+          ),
         website: z.string().min(1),
       }),
     )

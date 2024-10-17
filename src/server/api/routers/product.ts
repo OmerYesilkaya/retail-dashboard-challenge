@@ -37,19 +37,16 @@ export const productRouter = createTRPCRouter({
           categoryId: input.categoryId,
           supplierId: input.supplierId,
           quantity_in_stock: input.quantity_in_stock,
-          sku: generate_sku(), // NOTE(omer): Not sure if this is how you use sku..
+          sku: generate_sku(), // NOTE(omer): Not sure if this is how you use sku but what ever...
         },
       });
     }),
 
-  getMostRecent: publicProcedure
-    .input(z.object({ limit: z.number().min(1).default(10) }))
-    .query(async ({ ctx, input }) => {
-      return await ctx.db.product.findMany({
-        orderBy: { createdAt: "desc" },
-        take: input.limit,
-      });
-    }),
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.product.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+  }),
 
   getTotalProductCount: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db.product.count();

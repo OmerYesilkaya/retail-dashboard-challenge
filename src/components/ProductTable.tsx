@@ -3,12 +3,17 @@
 import { api } from "@/trpc/react";
 import { type Product } from "@prisma/client";
 import { type ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal, TriangleAlert } from "lucide-react";
 
+import { toast } from "@/hooks/use-toast";
 import { DataTable } from "@/components/ui/DataTable";
 import { DataTableColumnHeader } from "@/components/ui/DataTableColumnHeader";
-
-import { MoreHorizontal } from "lucide-react";
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/Tooltip";
 import { Button } from "@/components/ui/Button";
 import {
   DropdownMenu,
@@ -17,7 +22,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu";
-import { toast } from "@/hooks/use-toast";
 
 export const columns: (actions: {
   deleteProduct: (id: number) => Promise<void>;
@@ -33,11 +37,22 @@ export const columns: (actions: {
     header: ({ column }) => (
       <DataTableColumnHeader title="Name" column={column} />
     ),
+    cell: ({ cell }) => (
+      <div className="font-bold">{cell.getValue() as string}</div>
+    ),
   },
   {
     accessorKey: "price",
     header: ({ column }) => (
       <DataTableColumnHeader title="Price" column={column} />
+    ),
+    cell: ({ cell }) => (
+      <div>
+        {Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+        }).format(parseFloat(cell.getValue() as string))}
+      </div>
     ),
   },
   {
@@ -45,6 +60,27 @@ export const columns: (actions: {
     header: ({ column }) => (
       <DataTableColumnHeader title="Stock" column={column} />
     ),
+    cell: ({ cell }) => {
+      const value = parseInt(cell.getValue() as string);
+      const showWarning = value < 5;
+      return (
+        <div className="flex items-center gap-1">
+          {value}{" "}
+          {showWarning && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <TriangleAlert className="size-4 text-red-500" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  You are running out of this product!
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+        </div>
+      );
+    },
   },
   {
     id: "actions",
@@ -85,11 +121,12 @@ export const columns: (actions: {
 
 export function ProductTable() {
   const utils = api.useUtils();
-  const [products] = api.product.getMostRecent.useSuspenseQuery({});
+  const [products] = api.product.getAll.useSuspenseQuery();
   const { mutate } = api.product.deleteProduct.useMutation();
 
   return (
     <DataTable
+      title="Products"
       columns={columns({
         deleteProduct: async (id) => {
           mutate({ id });

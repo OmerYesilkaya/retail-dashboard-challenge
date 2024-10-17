@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
-        <main className="flex min-h-screen flex-col p-10">
+        <main className="mx-auto flex min-h-screen max-w-[1480px] flex-col p-10">
           <Header />
           <TRPCReactProvider>{children}</TRPCReactProvider>
           <Toaster />

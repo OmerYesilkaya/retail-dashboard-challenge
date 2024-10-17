@@ -1,12 +1,8 @@
 "use client";
 
-import {
-  ArchiveIcon,
-  CubeIcon,
-  LightningBoltIcon,
-} from "@radix-ui/react-icons";
 import { BigCard } from "./BigCard";
 import { api } from "@/trpc/react";
+import { DollarSign, Package, ShoppingCart } from "lucide-react";
 
 export function InfoCards() {
   const [totalProductCount] =
@@ -18,19 +14,19 @@ export function InfoCards() {
     <div className="flex gap-4">
       <BigCard
         label="Total Products"
-        icon={<CubeIcon className="size-5 text-zinc-500" />}
+        icon={<Package className="size-5 text-zinc-500" />}
         format={{ style: "decimal" }}
         value={totalProductCount}
       />
       <BigCard
         label="Total Stock"
-        icon={<ArchiveIcon className="size-5 text-zinc-500" />}
+        icon={<ShoppingCart className="size-5 text-zinc-500" />}
         format={{ style: "decimal" }}
         value={totalStock}
       />
       <BigCard
         label="Total Value"
-        icon={<LightningBoltIcon className="size-5 text-zinc-500" />}
+        icon={<DollarSign className="size-5 text-zinc-500" />}
         format={{ style: "currency", currency: "USD" }}
         value={totalValue}
       />

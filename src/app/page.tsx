@@ -6,7 +6,7 @@ import {
 } from "@/components/index";
 
 export default async function Home() {
-  void api.product.getMostRecent.prefetch({ limit: 10 });
+  void api.product.getAll.prefetch({ limit: 10 });
 
   return (
     <HydrateClient>

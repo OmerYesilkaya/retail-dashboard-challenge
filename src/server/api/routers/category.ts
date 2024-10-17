@@ -18,4 +18,21 @@ export const categoryRouter = createTRPCRouter({
         },
       });
     }),
+
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    const category = await ctx.db.category.findMany({
+      select: {
+        id: true,
+        name: true,
+        products: true,
+      },
+    });
+
+    return category.map((c) => {
+      return {
+        ...c,
+        product_count: c.products.length,
+      };
+    });
+  }),
 });

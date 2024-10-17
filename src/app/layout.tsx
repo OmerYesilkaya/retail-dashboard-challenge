@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "@/trpc/react";
+import { Button } from "@/components/ui/Button";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -17,7 +18,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
-        <main className="flex min-h-screen flex-col items-center justify-center bg-zinc-900 text-white">
+        <main className="flex min-h-screen flex-col p-10">
+          <div className="flex w-full justify-center">
+            {/* TODO(omer): Highlight if already on that page */}
+            <Button variant="link">Dashboard</Button>
+            <Button variant="link">Manage</Button>
+          </div>
           <TRPCReactProvider>{children}</TRPCReactProvider>
         </main>
       </body>

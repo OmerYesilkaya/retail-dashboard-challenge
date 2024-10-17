@@ -1,8 +1,9 @@
 "use client";
 
-import { BigCard } from "./BigCard";
 import { api } from "@/trpc/react";
 import { DollarSign, Package, ShoppingCart } from "lucide-react";
+
+import { BigCard } from "./BigCard";
 
 export function InfoCards() {
   const [totalProductCount] =

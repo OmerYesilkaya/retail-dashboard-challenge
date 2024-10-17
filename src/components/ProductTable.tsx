@@ -4,7 +4,7 @@ import { api } from "@/trpc/react";
 import { type Product } from "@prisma/client";
 import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, TriangleAlert } from "lucide-react";
-
+import { useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import { DataTable } from "@/components/ui/DataTable";
 import { DataTableColumnHeader } from "@/components/ui/DataTableColumnHeader";
@@ -22,9 +22,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu";
+import { type NavigateOptions } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export const columns: (actions: {
   deleteProduct: (id: number) => Promise<void>;
+  routerPush: (href: string, options?: NavigateOptions) => void;
 }) => ColumnDef<Product>[] = (actions) => [
   {
     accessorKey: "id",
@@ -99,7 +101,13 @@ export const columns: (actions: {
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuItem>View product</DropdownMenuItem>
-            <DropdownMenuItem>Restock</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                actions.routerPush(`/manage?productFromUrl=${product.id}`)
+              }
+            >
+              Restock
+            </DropdownMenuItem>
             <DropdownMenuItem
               className="text-red-500"
               onClick={async () => {
@@ -123,7 +131,7 @@ export function ProductTable() {
   const utils = api.useUtils();
   const [products] = api.product.getAll.useSuspenseQuery();
   const { mutate } = api.product.deleteProduct.useMutation();
-
+  const router = useRouter();
   return (
     <DataTable
       title="Products"
@@ -133,6 +141,7 @@ export function ProductTable() {
           await utils.product.invalidate();
           await utils.category.invalidate();
         },
+        routerPush: (e) => router.push(e),
       })}
       data={products}
     />

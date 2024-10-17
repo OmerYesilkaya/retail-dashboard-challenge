@@ -1,8 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/Button";
-import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 
 export function Header() {
   const router = useRouter();

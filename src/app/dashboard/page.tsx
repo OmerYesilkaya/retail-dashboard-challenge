@@ -28,13 +28,3 @@ export default function Dashboard() {
     </HydrateClient>
   );
 }
-
-/**
- * TODO(omer):
- *
- * - Form validation + Error handling
- * - Restock functionality
- * - performance?
- * - Delete db and re-init everything for testing with a single script
- *
- */

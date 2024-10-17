@@ -33,6 +33,21 @@ export const productRouter = createTRPCRouter({
         },
       });
     }),
+  setStock: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        quantity: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.product.update({
+        where: { id: input.id },
+        data: {
+          quantity_in_stock: input.quantity,
+        },
+      });
+    }),
 
   getAll: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db.product.findMany({

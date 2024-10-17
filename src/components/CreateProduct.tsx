@@ -34,6 +34,7 @@ import {
 
 import { toast } from "@/hooks/use-toast";
 import { CreateProductSchema, type CreateProductType } from "@/lib/types";
+import { RestockForm } from "./RestockForm";
 
 export function CreateProduct() {
   const utils = api.useUtils();
@@ -199,16 +200,8 @@ export function CreateProduct() {
           </form>
         </Form>
       </CardContent>
-
       <Separator />
-      <CardHeader>
-        <CardTitle>Restock Products</CardTitle>
-        <CardDescription>
-          Select an existing product and restock.
-        </CardDescription>
-
-        <div>NOT IMPLEMENTED YET</div>
-      </CardHeader>
+      <RestockForm />
     </Card>
   );
 }

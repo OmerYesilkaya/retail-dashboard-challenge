@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { api } from "@/trpc/react";
 
 import { Label, Pie, PieChart } from "recharts";
@@ -18,7 +19,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/Card";
-import { useMemo } from "react";
 
 export function CategoryStockChart() {
   const [pieChartData] = api.category.getPieChartData.useSuspenseQuery();

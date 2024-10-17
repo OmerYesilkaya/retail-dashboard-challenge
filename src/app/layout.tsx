@@ -5,6 +5,7 @@ import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import { Header } from "@/components/Header";
+import { Toaster } from "@/components/Temp";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -21,7 +22,7 @@ export default function RootLayout({
         <main className="flex min-h-screen flex-col p-10">
           <Header />
           <TRPCReactProvider>{children}</TRPCReactProvider>
-          {/* <Toaster /> */}
+          <Toaster />
         </main>
       </body>
     </html>

@@ -10,7 +10,9 @@ import {
 } from "@radix-ui/react-icons";
 
 export default function Dashboard() {
+  // TODO(omer): Figure out if we should prefetch everything
   void api.product.getMostRecent.prefetch({ limit: 10 });
+  void api.category.getAll.prefetch();
 
   return (
     <HydrateClient>

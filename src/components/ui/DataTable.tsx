@@ -64,7 +64,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className="w-full">
       {/* TODO(omer): Make this more dynamic, not every table has name field */}
-      <div className="flex w-full items-center gap-4 py-4">
+      <div className="flex w-full items-center gap-4 pb-4">
         <Input
           placeholder="Search by name..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}

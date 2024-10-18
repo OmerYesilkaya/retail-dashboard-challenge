@@ -1,11 +1,10 @@
-import { Suspense } from "react";
-
 import { api, HydrateClient } from "@/trpc/server";
 
 import { CreateCategory } from "@/components/CreateCategory";
 import { CreateProduct } from "@/components/CreateProduct";
 import { CreateSupplier } from "@/components/CreateSupplier";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { FallbackWrapper } from "@/components/FallbackWrapper";
 
 export default function Manage() {
   void api.category.getAll.prefetch();
@@ -15,15 +14,15 @@ export default function Manage() {
     <HydrateClient>
       <div className="flex flex-col gap-4">
         <PageHeader title="Manage" />
-        <Suspense fallback={null}>
+        <FallbackWrapper>
           <CreateProduct />
-        </Suspense>
-        <Suspense fallback={null}>
+        </FallbackWrapper>
+        <FallbackWrapper>
           <CreateCategory />
-        </Suspense>
-        <Suspense fallback={null}>
+        </FallbackWrapper>
+        <FallbackWrapper>
           <CreateSupplier />
-        </Suspense>
+        </FallbackWrapper>
       </div>
     </HydrateClient>
   );

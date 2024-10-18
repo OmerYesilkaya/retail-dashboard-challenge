@@ -1,13 +1,24 @@
-#!/bin/bash
+#!/bin/sh
+
+# # Run Prisma commands
+# echo "Generating Prisma Client..."
+pnpm dlx prisma generate
+
+# # echo "Running Prisma migrations..."
+pnpm dlx prisma migrate dev
+
+echo "Database setup complete. Populating data base..."
+
+echo $1
 
 # Delete all records from tables
-psql postgres://myuser:mypassword@my_db:5432/mydb -c "DELETE FROM \"InventoryTransaction\";"
-psql postgres://myuser:mypassword@my_db:5432/mydb -c "DELETE FROM \"Product\";"
-psql postgres://myuser:mypassword@my_db:5432/mydb -c "DELETE FROM \"Supplier\";"
-psql postgres://myuser:mypassword@my_db:5432/mydb -c "DELETE FROM \"Category\";"
+psql $1 -c "DELETE FROM \"InventoryTransaction\";"
+psql $1 -c "DELETE FROM \"Product\";"
+psql $1 -c "DELETE FROM \"Supplier\";"
+psql $1 -c "DELETE FROM \"Category\";"
 
 # Insert categories
-psql postgres://myuser:mypassword@my_db:5432/mydb <<EOF
+psql $1 <<EOF
 INSERT INTO "Category" (id, name, description) VALUES 
 (1, 'Electronics', 'Devices and gadgets'),
 (2, 'Books', 'Printed and digital books'),
@@ -15,7 +26,7 @@ INSERT INTO "Category" (id, name, description) VALUES
 EOF
 
 # Insert suppliers
-psql postgres://myuser:mypassword@my_db:5432/mydb <<EOF
+psql $1 <<EOF
 INSERT INTO "Supplier" (id, name, "contactPerson", phone, email, address, website) VALUES 
 (1, 'Global Tech Supplies', 'John Doe', '555-1234', 'johndoe@globaltech.com', '123 Tech Avenue, Silicon City', 'https://www.globaltechsupplies.com'),
 (2, 'Book Haven Distributors', 'Jane Smith', '555-5678', 'janesmith@bookhaven.com', '456 Literature Lane, Booktown', 'https://www.bookhavendistributors.com'),
@@ -23,7 +34,7 @@ INSERT INTO "Supplier" (id, name, "contactPerson", phone, email, address, websit
 EOF
 
 # Insert products
-psql postgres://myuser:mypassword@my_db:5432/mydb <<EOF
+psql $1 <<EOF
 INSERT INTO "Product" (id, name, "categoryId", "supplierId", price, "quantity_in_stock", "restock_date", description, sku) VALUES 
 (1, 'Smartphone X200', 1, 1, 699.99, 150, '2024-12-01', 'A high-end smartphone with cutting-edge features.', 'ELEC-SMX200'),
 (2, 'Wireless Headphones', 1, 1, 199.99, 200, '2024-11-15', 'Noise-cancelling over-ear headphones.', 'ELEC-WH001'),
@@ -34,7 +45,7 @@ INSERT INTO "Product" (id, name, "categoryId", "supplierId", price, "quantity_in
 EOF
 
 # Insert inventory transactions
-psql postgres://myuser:mypassword@my_db:5432/mydb <<EOF
+psql $1 <<EOF
 INSERT INTO "InventoryTransaction" (id, "productId", "transactionType", quantity, date, remarks) VALUES 
 (1, 1, 'restock', 150, '2024-10-01T09:00:00Z', 'Initial stock received from supplier.'),
 (2, 2, 'restock', 200, '2024-10-02T10:30:00Z', 'Initial stock received from supplier.'),

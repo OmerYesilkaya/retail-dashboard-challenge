@@ -8,8 +8,8 @@ COPY prisma ./
 COPY package.json pnpm-lock.yaml\* ./
 RUN npm install -g pnpm && pnpm i
 
-ENV DATABASE_URL postgres://myuser:mypassword@my_db:5432/mydb
+ENV DATABASE_URL ''
 
-RUN chmod +x wait-for-db.sh
+RUN chmod +x seed.sh
 
-CMD ["./wait-for-db.sh"]
+CMD ["sh", "-c", "./seed.sh ${DATABASE_URL}"]

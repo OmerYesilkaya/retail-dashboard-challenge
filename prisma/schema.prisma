@@ -18,7 +18,7 @@ model Category {
   products    Product[]
 
   createdAt   DateTime  @default(now()) 
-  updatedAt   DateTime  @updatedAt
+  updatedAt   DateTime?  @updatedAt
 }
 
 model Supplier {
@@ -32,7 +32,7 @@ model Supplier {
   products      Product[]
 
   createdAt     DateTime  @default(now()) 
-  updatedAt     DateTime  @updatedAt
+  updatedAt     DateTime?  @updatedAt
 }
 
 model Product {
@@ -50,7 +50,7 @@ model Product {
   transactions     InventoryTransaction[]
 
   createdAt        DateTime  @default(now()) 
-  updatedAt        DateTime  @updatedAt
+  updatedAt        DateTime?  @updatedAt
 }
 
 model InventoryTransaction {
@@ -62,5 +62,5 @@ model InventoryTransaction {
   product         Product   @relation(fields: [productId], references: [id])
   date            DateTime
   createdAt       DateTime  @default(now()) 
-  updatedAt       DateTime  @updatedAt
+  updatedAt       DateTime?  @updatedAt
 }

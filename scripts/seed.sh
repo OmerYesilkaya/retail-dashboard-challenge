@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Delete all records from tables
-psql -U admin -d retail-dashboard-challenge-postgres -c "DELETE FROM \"InventoryTransaction\";"
-psql -U admin -d retail-dashboard-challenge-postgres -c "DELETE FROM \"Product\";"
-psql -U admin -d retail-dashboard-challenge-postgres -c "DELETE FROM \"Supplier\";"
-psql -U admin -d retail-dashboard-challenge-postgres -c "DELETE FROM \"Category\";"
+psql postgres://myuser:mypassword@my_db:5432/mydb -c "DELETE FROM \"InventoryTransaction\";"
+psql postgres://myuser:mypassword@my_db:5432/mydb -c "DELETE FROM \"Product\";"
+psql postgres://myuser:mypassword@my_db:5432/mydb -c "DELETE FROM \"Supplier\";"
+psql postgres://myuser:mypassword@my_db:5432/mydb -c "DELETE FROM \"Category\";"
 
 # Insert categories
-psql -U admin -d retail-dashboard-challenge-postgres <<EOF
+psql postgres://myuser:mypassword@my_db:5432/mydb <<EOF
 INSERT INTO "Category" (id, name, description) VALUES 
 (1, 'Electronics', 'Devices and gadgets'),
 (2, 'Books', 'Printed and digital books'),
@@ -15,7 +15,7 @@ INSERT INTO "Category" (id, name, description) VALUES
 EOF
 
 # Insert suppliers
-psql -U admin -d retail-dashboard-challenge-postgres <<EOF
+psql postgres://myuser:mypassword@my_db:5432/mydb <<EOF
 INSERT INTO "Supplier" (id, name, "contactPerson", phone, email, address, website) VALUES 
 (1, 'Global Tech Supplies', 'John Doe', '555-1234', 'johndoe@globaltech.com', '123 Tech Avenue, Silicon City', 'https://www.globaltechsupplies.com'),
 (2, 'Book Haven Distributors', 'Jane Smith', '555-5678', 'janesmith@bookhaven.com', '456 Literature Lane, Booktown', 'https://www.bookhavendistributors.com'),
@@ -23,18 +23,18 @@ INSERT INTO "Supplier" (id, name, "contactPerson", phone, email, address, websit
 EOF
 
 # Insert products
-psql -U admin -d retail-dashboard-challenge-postgres <<EOF
+psql postgres://myuser:mypassword@my_db:5432/mydb <<EOF
 INSERT INTO "Product" (id, name, "categoryId", "supplierId", price, "quantity_in_stock", "restock_date", description, sku) VALUES 
 (1, 'Smartphone X200', 1, 1, 699.99, 150, '2024-12-01', 'A high-end smartphone with cutting-edge features.', 'ELEC-SMX200'),
 (2, 'Wireless Headphones', 1, 1, 199.99, 200, '2024-11-15', 'Noise-cancelling over-ear headphones.', 'ELEC-WH001'),
 (3, 'Modern JavaScript Book', 2, 2, 39.99, 300, NULL, 'An in-depth guide to modern JavaScript.', 'BOOK-JS2024'),
 (4, 'Classic Literature Set', 2, 2, 99.99, 50, '2024-11-20', 'A collection of classic literary works.', 'BOOK-CLSSET'),
-(5, 'Men\'s Leather Jacket', 3, 3, 249.99, 75, '2024-12-05', 'Premium quality leather jacket for men.', 'CLOT-MLJKT'),
-(6, 'Women\'s Designer Handbag', 3, 3, 349.99, 40, '2024-11-25', 'Elegant handbag crafted with fine materials.', 'CLOT-WDHBG');
+(5, 'Mens Leather Jacket', 3, 3, 249.99, 75, '2024-12-05', 'Premium quality leather jacket for men.', 'CLOT-MLJKT'),
+(6, 'Womens Designer Handbag', 3, 3, 349.99, 40, '2024-11-25', 'Elegant handbag crafted with fine materials.', 'CLOT-WDHBG');
 EOF
 
 # Insert inventory transactions
-psql -U admin -d retail-dashboard-challenge-postgres <<EOF
+psql postgres://myuser:mypassword@my_db:5432/mydb <<EOF
 INSERT INTO "InventoryTransaction" (id, "productId", "transactionType", quantity, date, remarks) VALUES 
 (1, 1, 'restock', 150, '2024-10-01T09:00:00Z', 'Initial stock received from supplier.'),
 (2, 2, 'restock', 200, '2024-10-02T10:30:00Z', 'Initial stock received from supplier.'),

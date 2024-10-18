@@ -1,0 +1,15 @@
+FROM --platform=linux/amd64 node:20-alpine AS deps
+RUN apk add --no-cache libc6-compat openssl postgresql-client bash
+WORKDIR /app
+
+COPY scripts ./
+COPY prisma ./
+
+COPY package.json pnpm-lock.yaml\* ./
+RUN npm install -g pnpm && pnpm i
+
+ENV DATABASE_URL postgres://myuser:mypassword@my_db:5432/mydb
+
+RUN chmod +x wait-for-db.sh
+
+CMD ["./wait-for-db.sh"]

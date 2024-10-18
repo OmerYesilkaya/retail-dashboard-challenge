@@ -5,7 +5,6 @@ WORKDIR /app
 # Install Prisma Client - remove if not using Prisma
 
 COPY prisma ./
-COPY scripts ./
 
 # Install dependencies based on the preferred package manager
 
@@ -17,13 +16,6 @@ RUN \
     elif [ -f pnpm-lock.yaml ]; then npm install -g pnpm && pnpm i; \
     else echo "Lockfile not found." && exit 1; \
     fi
-
-    
-# RUN prisma generate
-# RUN prisma mirate dev
-
-# RUN chmod +x seed.sh
-# CMD ["/seed.sh"]
 
 ##### BUILDER
 

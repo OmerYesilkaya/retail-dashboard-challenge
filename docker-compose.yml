@@ -27,11 +27,28 @@ services:
       args:
         NEXT_PUBLIC_CLIENTVAR: "clientvar"
     working_dir: /app
+    depends_on:
+      - seed
     ports:
       - "3000:3000"
     image: t3-app
     environment:
-      - DATABASE_URL=postgres://myuser:mypassword@localhost:5432/mydb
+      - DATABASE_URL=postgres://myuser:mypassword@my_db:5432/mydb
+    networks:
+      - app-network
+
+  seed:
+    working_dir: /app
+    build:
+      context: .
+      dockerfile: Dockerfile.seed
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+    image: "seed"
+    networks:
+      - app-network
 
 volumes:
   db_data:

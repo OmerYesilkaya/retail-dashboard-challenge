@@ -1,4 +1,4 @@
-## Rototip Inventory Management - Real World Case
+## Retail Inventory Management - Real World Case
 
 ### Getting Started
 Follow the steps below to clone and run the application:

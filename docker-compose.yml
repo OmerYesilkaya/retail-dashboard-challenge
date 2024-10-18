@@ -5,15 +5,15 @@ services:
     image: postgres:15
     container_name: postgres_db
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: retail_inventory_db
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "admin", "-d", "retail_inventory_db"]
+      test: ["CMD", "pg_isready", "-U", "${DB_NAME}", "-d", "${DB_NAME}"]
       interval: 10s
       retries: 5
     networks:
@@ -24,14 +24,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_CLIENTVAR: "clientvar"
     working_dir: /app
     depends_on:
       - seed
     ports:
       - "3000:3000"
-    image: t3-app
+    image: "next-app"
     environment:
       DATABASE_URL: postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_CONTAINER_NAME}:${DB_PORT}/${DB_NAME}
     networks:

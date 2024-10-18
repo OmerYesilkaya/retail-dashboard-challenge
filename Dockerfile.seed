@@ -8,8 +8,6 @@ COPY prisma ./
 COPY package.json pnpm-lock.yaml\* ./
 RUN npm install -g pnpm && pnpm i
 
-ENV DATABASE_URL ''
-
 RUN chmod +x seed.sh
 
-CMD ["sh", "-c", "./seed.sh ${DATABASE_URL}"]
+CMD ["./seed.sh"]

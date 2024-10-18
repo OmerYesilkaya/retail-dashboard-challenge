@@ -5,6 +5,7 @@ import { type Product } from "@prisma/client";
 import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, TriangleAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
+
 import { toast } from "@/hooks/use-toast";
 import { DataTable } from "@/components/ui/DataTable";
 import { DataTableColumnHeader } from "@/components/ui/DataTableColumnHeader";
@@ -132,6 +133,7 @@ export function ProductTable() {
   const [products] = api.product.getAll.useSuspenseQuery();
   const { mutate } = api.product.deleteProduct.useMutation();
   const router = useRouter();
+
   return (
     <DataTable
       title="Products"

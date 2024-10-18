@@ -31,10 +31,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/Select";
+import { RestockForm } from "@/components/RestockForm";
 
 import { toast } from "@/hooks/use-toast";
 import { CreateProductSchema, type CreateProductType } from "@/lib/types";
-import { RestockForm } from "./RestockForm";
 
 export function CreateProduct() {
   const utils = api.useUtils();

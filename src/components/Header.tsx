@@ -13,10 +13,10 @@ export function Header() {
     // TODO(omer): Make a reusable component out of these, too much repetition..
     <div className="flex w-full justify-center">
       <Button
-        onClick={() => router.push("/dashboard")}
+        onClick={() => router.push("/")}
         variant="link"
         className={cn({
-          underline: pathname === "/dashboard",
+          underline: pathname === "/",
         })}
       >
         Dashboard

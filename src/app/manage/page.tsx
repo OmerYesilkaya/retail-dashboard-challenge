@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { api, HydrateClient } from "@/trpc/server";
 
 import { CreateCategory } from "@/components/CreateCategory";
@@ -13,10 +15,18 @@ export default function Manage() {
     <HydrateClient>
       <div className="flex flex-col gap-4">
         <PageHeader title="Manage" />
-        <CreateProduct />
-        <CreateCategory />
-        <CreateSupplier />
+        <Suspense fallback={null}>
+          <CreateProduct />
+        </Suspense>
+        <Suspense fallback={null}>
+          <CreateCategory />
+        </Suspense>
+        <Suspense fallback={null}>
+          <CreateSupplier />
+        </Suspense>
       </div>
     </HydrateClient>
   );
 }
+
+export const dynamic = "force-dynamic";

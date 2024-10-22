@@ -59,7 +59,7 @@ model InventoryTransaction {
   transactionType String
   quantity        Int
   remarks         String
-  product         Product   @relation(fields: [productId], references: [id])
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   date            DateTime
   createdAt       DateTime  @default(now()) 
   updatedAt       DateTime?  @updatedAt
